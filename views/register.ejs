@@ -2,11 +2,12 @@
 
 <body>
     <h2>Register for an account</h2>
-    <div>
+    <p><%= message %></p>
+    <form action="register" method="POST">
         <label>Username <input type="text" name="username" placeholder="Username"></label>
         <label>Password <input type="password" name="password" placeholder="Password"></label>
         <button type="submit" method="POST">Register</button>
-    </div>
+    </form>
 </body>
 
 <% include ./footer %>

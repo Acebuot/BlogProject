@@ -12,7 +12,7 @@ router.get('/posts', function(req, res, next)
     .then(function(posts) {res.render('posts', { title: 'All Posts', posts})});
 });
 
-///Consider some change, currently built to go on posts.ejs so it needs to be in an array to work
+///Built to go on posts.ejs so it needs to be in an array to work
 router.get('/posts/:id', function(req, res, next)
 {
     const id = ObjectID(req.params.id);
@@ -37,9 +37,11 @@ router.get('/postsByUser/:username', function(req, res, next)
 
     posts
     .find({author: username})
+    .toArray()
     .then(function(posts)
     {
-        res.render('posts', { title:`${post.title}`, posts})
+        console.log(posts.length);
+        res.render('posts', { title:`${username}'s Posts`, posts})
     });
 });
 
@@ -50,11 +52,16 @@ const checkhAuthenication = (req, res, next) =>
         req.session.message = "You must log in to make a post";
         return res.redirect('/users/login');
     }
-        
+    return next();
 }
+
 
 router.get('/create-post', checkhAuthenication, function(req, res, next) 
 {
+    console.log('create post')
+    console.log(req.user);
+    console.log(req.user.username);
+    console.log(req.user.password);
     message = req.session.message || [];
     if (req.session.message != undefined) req.session.message = undefined;
     res.render('create-post', { title: 'Create a New Post', message });
@@ -62,22 +69,27 @@ router.get('/create-post', checkhAuthenication, function(req, res, next)
 
 router.post('/create-post', function(req, res, next)
 {
+    
     const {title, content} = req.body;
-    const username = req.user.username;
+    const user = req.user.username;
     const posts = req.app.locals.posts;
-    const date = new date().toISOString();
+    const date = new Date().toISOString();
 
     posts
-    .insertOne({title, content, date, author: username})
+    .insertOne({title, content, date, author: user})
     .then(function()
     {
-        const post = posts.findOne({ title, content, date, author: username});
-        res.render(`/posts/${post.id}`)
+        console.log('post success')
+        const post = posts.findOne({ title, content, date, author: user});
+        res.render(`/posts/${ObjectID(post.id)}`)
+        
     })
     .catch(function()
     {
+        console.log('post catch')
         req.session.message = 'An error occurred while posting. Please try again later.';
         res.redirect('/create-post');
+        
     });
 });
 

@@ -9,21 +9,36 @@ router.get('/', function(req, res, next) {
 
 router.get('/login', (req, res, next) =>
 {
+  title = "Log in";
   const message = req.session.message || [];
   if (req.session.message != undefined) req.session.message = undefined;
-  res.render('login', { title:'Log In', message })
+  res.render('login', { title, message })
 });
 
 router.post('/login', function(req, res, next)
 {
   passport.authenticate('local', function(err, user, info) 
   {
-    if (err) return res.render('login', {message : "An error occurred, please try again later"});
-    if (!user) return res.render('login', {message: info.message});
-
+    console.log('entered authenticate')
+    if (err)
+    {
+      console.log("error in passport auth")
+      req.session.message = "An error occurred, please try again later";
+      return res.redirect('login');
+    } 
+    if (!user) 
+    {
+      req.session.message = info.message;
+      return res.redirect('login');
+    }
     req.logIn(user, (err) => 
     {
+      
       if (err) return next(err);
+      console.log('req login')
+      console.log(req.user);
+      console.log(req.user.username);
+      console.log(req.user.password);
       return res.redirect('/create-post');
     })
   })(req,res,next);
@@ -31,9 +46,10 @@ router.post('/login', function(req, res, next)
 
 router.get('/register', function(req, res, next)
 {
+  title = 'Register';
   message = req.session.message || [];
   if (req.session.message != undefined) req.session.message = undefined;
-  res.render('register', { title: 'Register', message})
+  res.render('register', {title, message})
 });
 
 router.post('/register', function(req, res, next)
@@ -44,7 +60,7 @@ router.post('/register', function(req, res, next)
   if (users.findOne({ username }))
     {
       req.session.message = `An account with that username already exists`;
-      return red.redirect('/register')
+      return res.redirect('/users/register')
     }
 
   users
