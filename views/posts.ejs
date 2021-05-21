@@ -1,0 +1,7 @@
+<% include ./header %>
+<% for (i = 0; i < posts.length; i++) { %>
+    <H2><%= posts[i].title%></H2>
+    <span><strong><%= posts[i].author%></strong> on <small><%= posts[i].date %></small></span>
+    <p><%= posts[i].content %></p>
+<% } %>
+<% include ./footer %>

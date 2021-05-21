@@ -9,8 +9,9 @@ router.get('/', function(req, res, next) {
 
 router.get('/login', (req, res, next) =>
 {
-  const message = [];
-  res.render('login', {message})
+  const message = req.session.message || [];
+  if (req.session.message != undefined) req.session.message = undefined;
+  res.render('login', { title:'Log In', message })
 });
 
 router.post('/login', function(req, res, next)
@@ -32,7 +33,7 @@ router.get('/register', function(req, res, next)
 {
   message = req.session.message || [];
   if (req.session.message != undefined) req.session.message = undefined;
-  res.render('register', {message})
+  res.render('register', { title: 'Register', message})
 });
 
 router.post('/register', function(req, res, next)

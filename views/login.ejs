@@ -1,8 +1,9 @@
+<% include ./header %>
 <h1>login</h1>
-
 <p><%= message %></p>
 <form action="login" method="POST">
-    <input type="text" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="Password">
-    <button>Login</button>
+    <label>Username <input type="text" name="username" placeholder="Username"></label>
+    <label>Password <input type="password" name="password" placeholder="Password"></label>
+    <button type="submit" method="POST">Log in</button>
 </form>
+<% include ./footer %>
