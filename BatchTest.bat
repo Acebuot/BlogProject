@@ -1,6 +1,6 @@
+@echo off
+
 cd ../../users/xoe/desktop/blogproject
-
-
 
 git status
 
@@ -10,7 +10,7 @@ git add .
 
 TIMEOUT /T 60
 
-git commit -m "Added routes and views"
+git commit -m "Updated app routes and views"
 
 TIMEOUT /T 60 
 

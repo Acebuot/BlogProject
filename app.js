@@ -65,13 +65,8 @@ passport.use(new LocalStrategy({passReqToCallback: true}, (req, username, passwo
         return done(null, false, {message: 'Username not found'})
       
       if (user.password != password)
-        {console.log(user);return done(null, false, {message: 'Incorrect password'});}
+        return done(null, false, {message: 'Incorrect password'});
       
-      
-      console.log("user " + user);
-      console.log("username: " + user.username);
-      console.log("password: " + user.password);
-      console.log(user);
       return done(null,user);
     })
   }))

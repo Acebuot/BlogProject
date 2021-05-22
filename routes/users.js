@@ -19,10 +19,8 @@ router.post('/login', function(req, res, next)
 {
   passport.authenticate('local', function(err, user, info) 
   {
-    console.log('entered authenticate')
     if (err)
     {
-      console.log("error in passport auth")
       req.session.message = "An error occurred, please try again later";
       return res.redirect('login');
     } 
@@ -35,10 +33,6 @@ router.post('/login', function(req, res, next)
     {
       
       if (err) return next(err);
-      console.log('req login')
-      console.log(req.user);
-      console.log(req.user.username);
-      console.log(req.user.password);
       return res.redirect('/create-post');
     })
   })(req,res,next);
