@@ -51,20 +51,29 @@ router.post('/register', function(req, res, next)
   const {username, password} = req.body;
   const users = req.app.locals.users;
 
-  if (users.findOne({ username }))
+  users.findOne({ username }, function(err, user)
+  {
+    
+    //if username already exists, tell user
+    if (user != null)
     {
       req.session.message = `An account with that username already exists`;
       return res.redirect('/users/register')
     }
 
-  users
-  .insertOne({ username, password })
-  .then(function(){req.session.message = `Welcome to the Blog ${username}!`; redirect('/')})
-  .catch(function(reason)
-  {
-    req.session.message = `${reason}`;
-    red.redirect('/register')
+    //create user
+    users
+    .insertOne({ username, password })
+    .then(function(){req.session.message = `Welcome to the Blog ${username}!`; res.redirect('/posts')})
+    .catch(function(reason)
+    {
+      console.log(reason);
+      req.session.message = `${reason}`;
+      res.redirect('/users/register')
+    });
   });
+
+  
 });
 
 module.exports = router;

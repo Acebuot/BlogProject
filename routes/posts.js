@@ -5,11 +5,13 @@ const ObjectID = require('mongodb').ObjectID;
 router.get('/posts', function(req, res, next)
 {
     const posts = req.app.locals.posts;
-    
+    const message = req.session.message;
+
+    if (req.session.message != undefined) req.session.message = undefined;
     posts
     .find({})
     .toArray()
-    .then(function(posts) {res.render('posts', { title: 'All Posts', posts})});
+    .then(function(posts) {res.render('posts', { title: 'All Posts', posts, message})});
 });
 
 ///Built to go on posts.ejs so it needs to be in an array to work
@@ -20,14 +22,21 @@ router.get('/posts/:id', function(req, res, next)
     const users = req.app.locals.users;
     const arr = [];
 
+    const message = req.session.message;
+    if (req.session.message != undefined) req.session.message = undefined;
+
     posts
     .findOne({ _id: id})
     .then(function(post)
     {
+        if (post == null)
+        {
+            res.render('posts', { title:`view post`, posts: arr, message: 'Sorry, the post was not found'});
+        }
         arr.push(post);
-        console.log('here come that bitch');
+        console.log('View post by ID');
         console.log(post);
-        res.render('posts', { title:`view post`, posts: arr});
+        res.render('posts', { title:`view post`, posts: arr, message});
     });
 });
 
@@ -83,7 +92,9 @@ router.post('/create-post', checkhAuthenication, function(req, res, next)
     const {title, content} = req.body;
     const userId = ObjectID(req.user.id);
     const posts = req.app.locals.posts;
-    const date = new Date().toISOString();
+    const date = new Date().toISOString()
+                                .replace(/T/, ' ') //replace T with space
+                                .replace(/\..+/, ''); //replace everything after time
 
 
     users

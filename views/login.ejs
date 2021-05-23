@@ -1,9 +1,23 @@
 <% include ./header %>
-<h1>login</h1>
-<p><%= message %></p>
-<form action="login" method="POST">
-    <label>Username <input type="text" name="username" placeholder="Username"></label>
-    <label>Password <input type="password" name="password" placeholder="Password"></label>
-    <button type="submit" method="POST">Log in</button>
-</form>
+
+<body class="container">
+
+    <div class="container-xl" style="width: 100%;">
+
+        <div class="text-center mt-5">
+            <img class="img-fluid mx-auto rounded-circle" style="width:40%;" src="https://64.media.tumblr.com/0db3bf45d0ed08c087250cc9e0399117/c11a49a067523931-a7/s1280x1920/39f697687ac3b161cbc840d69c8e64100ef9f516.jpg" alt="placeholder image">
+        </div>
+        
+        <h1 style="text-align: center;">Log in</h1>
+        <p><%= message %></p>
+        <form class="d-flex flex-column" action="login" method="POST">
+            <label class="mb-3">Username <input class="form-control" type="text" name="username" placeholder="Username"></label>
+            <label class="mb-3">Password <input class="form-control" type="password" name="password" placeholder="Password"></label>
+            <button class="btn btn-primary rounded-pill" type="submit" method="POST">Log in</button>
+            <nav>
+                <p style="text-align: center;"><a href="/users/register">Register a New Account</a></p>
+            </nav>
+        </form>
+    </div>
+</body>
 <% include ./footer %>

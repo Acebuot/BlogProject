@@ -1,6 +1,11 @@
 <% include ./header %>
+
+<% if (message != undefined) { %>
+    <h1><%= message %></h1>
+<% } %>
+
 <% for (i = 0; i < posts.length; i++) { %>
-    <H2><%= posts[i].title%></H2>
+    <H2><a href="/posts/<%= posts[i]._id %>"><%= posts[i].title%></a></H2>
     <span><strong><%= posts[i].author%></strong> on <small><%= posts[i].date %></small></span>
     <p><%= posts[i].content %></p>
 <% } %>
