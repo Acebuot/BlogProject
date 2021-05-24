@@ -1,13 +1,20 @@
 <% include ./header %>
 
-<body>
+<body class="container-lg" style="text-align: center;">
+    <div class="mx-auto mt-5" style="width: 40%;">
+        <img class="img-fluid rounded-circle"  src="https://3aws3g15i5812mz28r3dqig1-wpengine.netdna-ssl.com/wp-content/uploads/2016/08/Gon-Getting-Over-his-Frustration.png" alt="placeholder image">
+    </div>
+    
     <h2>Register for an account</h2>
     <p><%= message %></p>
-    <form action="register" method="POST">
-        <label>Username <input type="text" name="username" placeholder="Username"></label>
-        <label>Password <input type="password" name="password" placeholder="Password"></label>
-        <button type="submit" method="POST">Register</button>
+    <form class="d-flex flex-column text-start mx-auto" action="register" method="POST" style="max-width: 672px;">
+        <label class="mb-3">Username <input class="form-control" type="text" name="username" placeholder="Username"></label>
+        <label class="mb-3">Password <input class="form-control" type="password" name="password" placeholder="Password"></label>
+        <button class="btn-primary rounded-pill btn" type="submit" method="POST">Register</button>
     </form>
+    <nav>
+        <p><a href="/users/login">Already have an account? Log in instead</a></p>
+    </nav>
 </body>
 
 <% include ./footer %>

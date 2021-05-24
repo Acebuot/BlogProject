@@ -1,12 +1,20 @@
 <% include ./header %>
+<body class="container-lg">
 
-<% if (message != undefined) { %>
-    <h1><%= message %></h1>
-<% } %>
+    <% if (message != undefined) { %>
+        <h3 style="text-align: center;"><%= message %></h3>
+    <% } %>
 
-<% for (i = 0; i < posts.length; i++) { %>
-    <H2><a href="/posts/<%= posts[i]._id %>"><%= posts[i].title%></a></H2>
-    <span><strong><%= posts[i].author%></strong> on <small><%= posts[i].date %></small></span>
-    <p><%= posts[i].content %></p>
-<% } %>
+    <% for (i = 0; i < posts.length; i++) { %>
+        <div class="shadow my-2 p-2 rounded">
+
+            <H2 class="pb-3"><a href="/posts/<%= posts[i]._id %>"><%= posts[i].title%></a></H2>
+            <span><strong><%= posts[i].author%></strong> on <small><%= posts[i].date %></small></span>
+            <p><%= posts[i].content %></p>
+
+        </div>
+        
+    <% } %>
+
+</body>
 <% include ./footer %>
