@@ -2,6 +2,24 @@ var express = require('express');
 var router = express.Router();
 const ObjectID = require('mongodb').ObjectID;
 
+userLoggedIn = function()
+{
+    const id = ObjectID(req.user.id);
+    
+    if (id == undefined)
+        return false;
+    
+    const users = req.app.locals.users;
+
+    users
+        .findOne({ _id: id})
+        .then(function(user)
+        {
+            return user.username;
+        })
+    console.log(id);
+}
+
 router.get('/posts', function(req, res, next)
 {
     const posts = req.app.locals.posts;
@@ -14,13 +32,11 @@ router.get('/posts', function(req, res, next)
     .then(function(posts) {res.render('posts', { title: 'All Posts', posts, message})});
 });
 
-///Built to go on posts.ejs so it needs to be in an array to work
+
 router.get('/posts/:id', function(req, res, next)
 {
     const id = ObjectID(req.params.id);
     const posts = req.app.locals.posts;
-    const users = req.app.locals.users;
-    const arr = [];
 
     const message = req.session.message;
     if (req.session.message != undefined) req.session.message = undefined;
@@ -33,10 +49,7 @@ router.get('/posts/:id', function(req, res, next)
         {
             res.render('posts', { title:`view post`, posts: arr, message: 'Sorry, the post was not found'});
         }
-        arr.push(post);
-        console.log('View post by ID');
-        console.log(post);
-        res.render('posts', { title:`view post`, posts: arr, message});
+        res.render('post', { title:`view post`, post, message});
     });
 });
 
