@@ -63,8 +63,6 @@ router.get('/posts/:id', function(req, res, next)
     const posts = req.app.locals.posts;
     var username = null;
     
-    
-    //console.log(req);
     const message = req.session.message;
     if (req.session.message != undefined) req.session.message = undefined;
 
@@ -107,6 +105,8 @@ router.get('/postsByUser/:username', function(req, res, next)
 
 });
 
+router.post('/postsByUser')
+
 
 router.get('/create-post', checkhAuthenication, function(req, res, next) 
 {
@@ -119,8 +119,7 @@ router.get('/create-post', checkhAuthenication, function(req, res, next)
     userLoggedIn(req)
     .then(function(user) 
     {
-        
-            res.render('create-post', { title: 'Create a New Post', message, user});
+        res.render('create-post', { title: 'Create a New Post', message, user});
     });
 
 });

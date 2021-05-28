@@ -8,27 +8,37 @@ router.get('/', function(req, res, next) {
 });
 
 //Makes Users login and registration route unaccessible when logged in
-const checkhAuthenication = (req, res, next) =>
+//consider using a promise instead
+function checkhAuthenication(req, res)
 {
-  //redirect if already logged in
+  return new Promise(function(Resolve, reject)
+  {
+    //redirect if already logged in
     if (req.isAuthenticated())
     {
         req.session.message = "You are already logged in";
-        return res.redirect('/posts');
+        res.redirect('/posts');
+        reject();
     }
-
     //send null user argument to next function
     user = null;
-    next().apply(null, user);
-    return next();
+    Resolve(user);
+  })
+      
 }
 
-router.get('/login',checkhAuthenication, (req, res, next) =>
+router.get('/login', (req, res, next) =>
 {
-  title = "Log in";
-  const message = req.session.message || [];
-  if (req.session.message != undefined) req.session.message = undefined;
-  res.render('login', { title, message, user})
+  checkhAuthenication(req,res)
+    .then(function(user)
+    {
+      title = "Log in";
+      const message = req.session.message || [];
+      if (req.session.message != undefined) req.session.message = undefined;
+
+      res.render('login', { title, message, user})
+    });
+  
 });
 
 router.post('/login', function(req, res, next)
@@ -54,12 +64,18 @@ router.post('/login', function(req, res, next)
   })(req,res,next);
 })
 
-router.get('/register', checkhAuthenication, function(req, res, next)
+router.get('/register', function(req, res, next)
 {
-  title = 'Register';
-  message = req.session.message || [];
-  if (req.session.message != undefined) req.session.message = undefined;
-  res.render('register', {title, message, user})
+  checkhAuthenication(req, res)
+    .then(function(user)
+    {
+      title = 'Register';
+      message = req.session.message || [];
+      if (req.session.message != undefined) req.session.message = undefined;
+    
+      res.render('register', {title, message, user});
+    });
+  
 });
 
 router.post('/register', function(req, res, next)
