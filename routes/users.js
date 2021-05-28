@@ -7,12 +7,28 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/login', (req, res, next) =>
+//Makes Users login and registration route unaccessible when logged in
+const checkhAuthenication = (req, res, next) =>
+{
+  //redirect if already logged in
+    if (req.isAuthenticated())
+    {
+        req.session.message = "You are already logged in";
+        return res.redirect('/posts');
+    }
+
+    //send null user argument to next function
+    user = null;
+    next().apply(null, user);
+    return next();
+}
+
+router.get('/login',checkhAuthenication, (req, res, next) =>
 {
   title = "Log in";
   const message = req.session.message || [];
   if (req.session.message != undefined) req.session.message = undefined;
-  res.render('login', { title, message })
+  res.render('login', { title, message, user})
 });
 
 router.post('/login', function(req, res, next)
@@ -38,12 +54,12 @@ router.post('/login', function(req, res, next)
   })(req,res,next);
 })
 
-router.get('/register', function(req, res, next)
+router.get('/register', checkhAuthenication, function(req, res, next)
 {
   title = 'Register';
   message = req.session.message || [];
   if (req.session.message != undefined) req.session.message = undefined;
-  res.render('register', {title, message})
+  res.render('register', {title, message, user})
 });
 
 router.post('/register', function(req, res, next)

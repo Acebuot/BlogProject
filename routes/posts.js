@@ -2,8 +2,7 @@ var express = require('express');
 var router = express.Router();
 const ObjectID = require('mongodb').ObjectID;
 
-//return user obj of logged in user
-//please make a handler for no user
+//return user obj of logged in user otherwise return null user
 function userLoggedIn(req)
 {
     
@@ -12,7 +11,7 @@ function userLoggedIn(req)
     {
         if (req.user == undefined)
         {
-            reject({user: null})
+            resolve({user: null})
         }
         else
         {
@@ -22,27 +21,39 @@ function userLoggedIn(req)
             .findOne({ _id: id})
             .then(function(user)
             {
-                const username = user.username;
-                //console.log(username);
+                
                 resolve({user});
             })
         }
     })
 }
 
+const checkhAuthenication = (req, res, next) =>
+{
+    if (!req.isAuthenticated())
+    {
+        req.session.message = "You must log in to make a post";
+        return res.redirect('/users/login');
+    }
+    return next();
+}
+
 router.get('/posts', function(req, res, next)
 {
-    userLoggedIn(req)
-    .then(function(username) {console.log(username)});
+    
 
     const posts = req.app.locals.posts;
     const message = req.session.message;
-
     if (req.session.message != undefined) req.session.message = undefined;
-    posts
-    .find({})
-    .toArray()
-    .then(function(posts) {res.render('posts', { title: 'All Posts', posts, message})});
+
+    userLoggedIn(req).then( function(user) 
+    {
+        posts
+            .find({})
+            .toArray()
+            .then(function(posts) {res.render('posts', { title: 'All Posts', posts, message, user})});
+    });
+
 });
 
 
@@ -57,21 +68,23 @@ router.get('/posts/:id', function(req, res, next)
     const message = req.session.message;
     if (req.session.message != undefined) req.session.message = undefined;
 
-    userLoggedIn(req, username);
-    //username = await userLoggedIn(req);
-    //console.log(username);
-    posts
-    .findOne({ _id: id})
-    .then(function(post)
+    userLoggedIn(req)
+    .then(function(user) 
     {
-        
-        
-        if (post == null)
+        posts
+        .findOne({ _id: id})
+        .then(function(post)
         {
-            res.render('posts', { title:`View Post`, posts: arr, message: 'Sorry, the post was not found'});
-        }
-        res.render('post', { title:`View Post`, post, message});
+            
+            
+            if (post == null)
+            {
+                res.render('posts', { title:`View Post`, posts: arr, message: 'Sorry, the post was not found'});
+            }
+            res.render('post', { title:`View Post`, post, message, user});
+        });
     });
+    
 });
 
 router.get('/postsByUser/:username', function(req, res, next)
@@ -79,25 +92,20 @@ router.get('/postsByUser/:username', function(req, res, next)
     const username = req.params;
     const posts = req.app.locals.posts;
     
-    posts
-    .find({author: username})
-    .toArray()
-    .then(function(posts)
+    userLoggedIn(req)
+    .then(function(user) 
     {
-        console.log(posts.length);
-        res.render('posts', { title:`${username}'s Posts`, posts})
+        posts
+        .find({author: username})
+        .toArray()
+        .then(function(posts)
+        {
+            console.log(posts.length);
+            res.render('posts', { title:`${username}'s Posts`, posts, user})
+        });
     });
-});
 
-const checkhAuthenication = (req, res, next) =>
-{
-    if (!req.isAuthenticated())
-    {
-        req.session.message = "You must log in to make a post";
-        return res.redirect('/users/login');
-    }
-    return next();
-}
+});
 
 
 router.get('/create-post', checkhAuthenication, function(req, res, next) 
@@ -108,15 +116,13 @@ router.get('/create-post', checkhAuthenication, function(req, res, next)
     message = req.session.message || [];
     if (req.session.message != undefined) req.session.message = undefined;
 
-    users
-        .findOne({_id: id})
-        .then(function(user) 
-        {
-            // console.log('YAy')
-            // console.log(user);
-            
-            res.render('create-post', { title: 'Create a New Post', message });
-        });
+    userLoggedIn(req)
+    .then(function(user) 
+    {
+        
+            res.render('create-post', { title: 'Create a New Post', message, user});
+    });
+
 });
 
 router.post('/create-post', checkhAuthenication, function(req, res, next)
@@ -131,6 +137,7 @@ router.post('/create-post', checkhAuthenication, function(req, res, next)
                                 .replace(/\..+/, ''); //replace everything after time
 
 
+                                
     users
         .findOne({ _id: userId})
         .then(function(user)

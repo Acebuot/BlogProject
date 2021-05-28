@@ -7,9 +7,34 @@
     <script src="https://unpkg.com/browse/@popperjs/core@2.9.2/" ></script>
     <script src="/bootstrap/js/bootstrap.js"></script>
     <script>
+
+      let user;
+
+      //Disabling form submissions if there are invalid fields
+      (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+          .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+
+              form.classList.add('was-validated')
+            }, false)
+          })
+      })()
+      
+      //Show content on navbar item, User, onHover
       document.addEventListener("DOMContentLoaded", function()
       {
-      // make it as accordion for smaller screens
+      
       if (window.innerWidth > 768) 
       {
 
@@ -40,14 +65,14 @@
         });
 
       }
-      // end if innerWidth
       }); 
-      // DOMContentLoaded  end
     </script>
   </head>
 
   <body class="container-fluid-lg">
 
+    
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded shadow">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">BlogMan</a>

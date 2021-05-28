@@ -1,14 +1,11 @@
 <% include ./header %>
-<body>
-    <h1>create post</h1>
+<div class="container-lg text-center mt-5">
+    <h1>Create Post</h1>
     <p><%= message %></p>
-    <form action="create-post" method="POST">
-        <label>Post Title <input type="text" name="title" placeholder="Enter post title here"></label>
-        <label>Content <textarea name="content" cols="30" rows="10"></textarea></label>
-        <button type="submit" method="POST">Post</button>
+    <form class="d-flex flex-column text-start" action="create-post" method="POST">
+        <label class="mb-3">Post Title <input class="form-control" required pattern="\w{5,20}" title="5 to 20 characters" type="text" name="title" placeholder="Enter post title here"></label>
+        <label class="mb-3">Content <textarea class="form-control" required pattern="\w{20,200}" title="20 to 200 characters" name="content" cols="30" rows="10"></textarea></label>
+        <button class="btn btn-primary rounded-pill" type="submit" method="POST">Post</button>
     </form>
-    
-</body>
-
-
+</div>
 <% include ./footer %>

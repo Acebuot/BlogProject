@@ -1,20 +1,20 @@
 <% include ./header %>
 
-<body class="container-lg" style="text-align: center;">
+<div class="container-lg text-center">
     <div class="mx-auto mt-5" style="width: 40%;">
         <img class="img-fluid rounded-circle" style="max-height: 270px;"  src="https://3aws3g15i5812mz28r3dqig1-wpengine.netdna-ssl.com/wp-content/uploads/2016/08/Gon-Getting-Over-his-Frustration.png" alt="placeholder image">
     </div>
     
     <h1>Register for an account</h1>
     <p><%= message %></p>
-    <form class="d-flex flex-column text-start mx-auto" action="register" method="POST" style="max-width: 672px;">
-        <label class="mb-3">Username <input class="form-control" type="text" name="username" placeholder="Username"></label>
-        <label class="mb-3">Password <input class="form-control" type="password" name="password" placeholder="Password"></label>
+    <form class="d-flex flex-column text-start mx-auto needs-validation" action="register" method="POST" style="max-width: 672px;">
+        <label class="mb-3">Username <input class="form-control" required pattern="([A-Za-z]{3,15})(\d{0,4})" Title="3 to 15 letters and may include up to numbers after" type="text" name="username" placeholder="Username"></label>
+        <label class="mb-3">Password <input class="form-control" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password must contain 8 characters including lowercase and uppercase letters, and a number" type="password" name="password" placeholder="Password"></label>
         <button class="btn-primary rounded-pill btn" type="submit" method="POST">Register</button>
     </form>
     <nav>
         <p><a href="/users/login">Already have an account? Log in instead</a></p>
     </nav>
-</body>
+</div>
 
 <% include ./footer %>
