@@ -6,6 +6,44 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css"/>
     <script src="https://unpkg.com/browse/@popperjs/core@2.9.2/" ></script>
     <script src="/bootstrap/js/bootstrap.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function()
+      {
+      // make it as accordion for smaller screens
+      if (window.innerWidth > 768) 
+      {
+
+        document.querySelectorAll('.navbar .nav-item').forEach(function(everyitem){
+
+          everyitem.addEventListener('mouseover', function(e){
+
+            let el_link = this.querySelector('a[data-bs-toggle]');
+
+            if(el_link != null){
+              let nextEl = el_link.nextElementSibling;
+              el_link.classList.add('show');
+              nextEl.classList.add('show');
+            }
+
+          });
+          everyitem.addEventListener('mouseleave', function(e){
+            let el_link = this.querySelector('a[data-bs-toggle]');
+
+            if(el_link != null){
+              let nextEl = el_link.nextElementSibling;
+              el_link.classList.remove('show');
+              nextEl.classList.remove('show');
+            }
+
+
+          })
+        });
+
+      }
+      // end if innerWidth
+      }); 
+      // DOMContentLoaded  end
+    </script>
   </head>
 
   <body class="container-fluid-lg">
@@ -19,10 +57,36 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#">Home</a>
+                  <% if (title.includes("All Posts") || title.includes("View Post")) { %>
+                  <a class="nav-link active" aria-current="page" href="/posts">Posts</a>
+                  <% } else { %>
+                  <a class="nav-link" aria-current="page" href="/posts">Posts</a>  
+                  <% } %>
                 </li>
+                <% if (title.includes("New Post")) { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Link</a>
+                  <a class="nav-link active" href="/create-post">Create a Post</a>
+                </li>
+                <% } else { %>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/create-post">Create a Post</a>
+                  </li>
+                <% } %>
+                <li class="nav-item dropdown">
+                  <% if (title.includes("Log in") || title.includes("Register")) { %>
+                  <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    User
+                  </a>
+                  <% } else { %>
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    User
+                  </a>
+                  <% } %>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="/users/login">Log In</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/users/register">Register</a></li>
+                  </ul>
                 </li>
                 
               </ul>

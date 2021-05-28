@@ -2,26 +2,39 @@ var express = require('express');
 var router = express.Router();
 const ObjectID = require('mongodb').ObjectID;
 
-userLoggedIn = function()
+//return user obj of logged in user
+//please make a handler for no user
+function userLoggedIn(req)
 {
-    const id = ObjectID(req.user.id);
-    
-    if (id == undefined)
-        return false;
     
     const users = req.app.locals.users;
-
-    users
-        .findOne({ _id: id})
-        .then(function(user)
+    return new Promise((resolve, reject) => 
+    {
+        if (req.user == undefined)
         {
-            return user.username;
-        })
-    console.log(id);
+            reject({user: null})
+        }
+        else
+        {
+            const id = ObjectID(req.user.id);
+
+            users
+            .findOne({ _id: id})
+            .then(function(user)
+            {
+                const username = user.username;
+                //console.log(username);
+                resolve({user});
+            })
+        }
+    })
 }
 
 router.get('/posts', function(req, res, next)
 {
+    userLoggedIn(req)
+    .then(function(username) {console.log(username)});
+
     const posts = req.app.locals.posts;
     const message = req.session.message;
 
@@ -37,19 +50,27 @@ router.get('/posts/:id', function(req, res, next)
 {
     const id = ObjectID(req.params.id);
     const posts = req.app.locals.posts;
-
+    var username = null;
+    
+    
+    //console.log(req);
     const message = req.session.message;
     if (req.session.message != undefined) req.session.message = undefined;
 
+    userLoggedIn(req, username);
+    //username = await userLoggedIn(req);
+    //console.log(username);
     posts
     .findOne({ _id: id})
     .then(function(post)
     {
+        
+        
         if (post == null)
         {
-            res.render('posts', { title:`view post`, posts: arr, message: 'Sorry, the post was not found'});
+            res.render('posts', { title:`View Post`, posts: arr, message: 'Sorry, the post was not found'});
         }
-        res.render('post', { title:`view post`, post, message});
+        res.render('post', { title:`View Post`, post, message});
     });
 });
 
