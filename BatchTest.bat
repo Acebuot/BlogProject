@@ -10,7 +10,7 @@ git add .
 
 TIMEOUT /T 60
 
-git commit -m "Updated app routes and views"
+git commit -m "Added and fixed more user features, added search by user, and some bugfixes"
 
 TIMEOUT /T 60 
 

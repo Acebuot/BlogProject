@@ -11,7 +11,7 @@ function userLoggedIn(req)
     {
         if (req.user == undefined)
         {
-            resolve({user: null})
+            resolve(null)
         }
         else
         {
@@ -22,7 +22,7 @@ function userLoggedIn(req)
             .then(function(user)
             {
                 
-                resolve({user});
+                resolve(user);
             })
         }
     })
@@ -51,7 +51,11 @@ router.get('/posts', function(req, res, next)
         posts
             .find({})
             .toArray()
-            .then(function(posts) {res.render('posts', { title: 'All Posts', posts, message, user})});
+            .then(function(posts) 
+            {
+                console.log(user);
+                res.render('posts', { title: 'All Posts', posts, message, user});
+            });
     });
 
 });
@@ -85,21 +89,45 @@ router.get('/posts/:id', function(req, res, next)
     
 });
 
-router.get('/postsByUser/:username', function(req, res, next)
+router.get('/postsByUser', function(req, res, next)
 {
-    const username = req.params;
     const posts = req.app.locals.posts;
-    
+    const message = req.session.message;
+    if (req.session.message != undefined) req.session.message = undefined;
+
     userLoggedIn(req)
     .then(function(user) 
     {
+        //if not logged in
+        if (user == null)
+        {
+            //go to all posts
+            return res.redirect('/posts');
+        }
+
+        //go to logged user's posts
+        res.redirect(`/postsByUser/${user}`);
+    });
+
+});
+
+router.get('/postsByUser/:username', function(req, res, next)
+{
+    const {username} = req.params;
+    const posts = req.app.locals.posts;
+    const message = req.session.message;
+    if (req.session.message != undefined) req.session.message = undefined;
+
+    userLoggedIn(req)
+    .then(function(user) 
+    {
+        
         posts
         .find({author: username})
         .toArray()
         .then(function(posts)
         {
-            console.log(posts.length);
-            res.render('posts', { title:`${username}'s Posts`, posts, user})
+            res.render('posts', { title:`${username}'s Posts`,message, posts, user})
         });
     });
 
@@ -137,11 +165,9 @@ router.post('/create-post', checkhAuthenication, function(req, res, next)
 
 
                                 
-    users
-        .findOne({ _id: userId})
-        .then(function(user)
-        {
-            
+    userLoggedIn(req)
+    .then(function(user) 
+    {
             posts
             .insertOne({title, content, date, author: user.username}, function(err, result)
             {
@@ -152,13 +178,7 @@ router.post('/create-post', checkhAuthenication, function(req, res, next)
                     return res.redirect('/create-post');
                 }
                 console.log('post success');
-                //const post = posts.findOne({ title, content, date, author: user});
-                //console.log(res.ops);
-                console.log(result.insertedId);
-                
-                
                 res.redirect(`/posts/${result.insertedId}`);
-                
             })
         })
         .catch(function(error)
