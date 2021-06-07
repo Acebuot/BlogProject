@@ -32,7 +32,7 @@ const checkhAuthenication = (req, res, next) =>
 {
     if (!req.isAuthenticated())
     {
-        req.session.message = "You must log in to make a post";
+        req.session.message = "You must log in to do that";
         return res.redirect('/users/login');
     }
     return next();
@@ -83,10 +83,21 @@ router.get('/posts/:id', function(req, res, next)
             {
                 res.render('posts', { title:`View Post`, posts: arr, message: 'Sorry, the post was not found'});
             }
+            console.log(post.author);
+            if (user != null) console.log(user.username)
+            else console.log('no user logged in');
             res.render('post', { title:`View Post`, post, message, user});
         });
     });
     
+});
+
+router.post('/deletePost', checkhAuthenication, function(req, res, next)
+{
+    const posts = req.app.locals.posts;
+    const id = req.post;
+    console.log(id);
+    //posts.deleteOne()
 });
 
 router.get('/postsByUser', function(req, res, next)
@@ -106,7 +117,7 @@ router.get('/postsByUser', function(req, res, next)
         }
 
         //go to logged user's posts
-        res.redirect(`/postsByUser/${user}`);
+        res.redirect(`/postsByUser/${user.username}`);
     });
 
 });

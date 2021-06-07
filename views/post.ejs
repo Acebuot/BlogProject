@@ -14,10 +14,17 @@
         <span><strong><%= post.author%></strong> on <small><%= post.date %></small></span>
         <p><%= post.content %></p>
 
+       
         
     </div>
     <nav>
-        <small><a href="/posts">go back</a></small>
+        <small><a class="btn btn-primary rounded" href="/posts">Go Back to All Posts</a></small>
+
+        <% if (post.author == user.username) { %>
+
+            <button class="btn btn-danger rounded" method="POST" action="deletePost">Delete</button>
+    
+            <% } %>
     </nav>
 </div>
 
