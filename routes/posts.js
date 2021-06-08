@@ -53,7 +53,7 @@ router.get('/posts', function(req, res, next)
             .toArray()
             .then(function(posts) 
             {
-                console.log(user);
+                //console.log(user);
                 res.render('posts', { title: 'All Posts', posts, message, user});
             });
     });
@@ -83,20 +83,19 @@ router.get('/posts/:id', function(req, res, next)
             {
                 res.render('posts', { title:`View Post`, posts: arr, message: 'Sorry, the post was not found'});
             }
-            console.log(post.author);
-            if (user != null) console.log(user.username)
-            else console.log('no user logged in');
             res.render('post', { title:`View Post`, post, message, user});
         });
     });
     
 });
 
-router.post('/deletePost', checkhAuthenication, function(req, res, next)
+router.post('/posts/deletePost', checkhAuthenication, function(req, res, next)
 {
     const posts = req.app.locals.posts;
-    const id = req.post;
+    const id = req.body;
     console.log(id);
+
+    res.redirect('/posts');
     //posts.deleteOne()
 });
 
