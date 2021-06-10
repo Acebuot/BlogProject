@@ -1,10 +1,5 @@
 <% include ./header %>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function(event) { 
-        document.getElementById('id').value = 'bar';
-    });
-</script>
 
 <div class="container mt-5">
             
@@ -26,10 +21,12 @@
     <nav>
         <small><a class="btn btn-primary rounded" href="/posts">Go Back to All Posts</a></small>
 
+        
         <% if (user != null && post.author == user.username) { %>
 
-            <form action="deletePost" method="POST">
-                <input id="id" type="text" name="hey">
+            
+            <form class="d-inline" action="deletePost" method="POST">
+                <textarea class="d-none" name="postID" id="postID" cols="30" rows="10"><%= post._id %></textarea>
                 <button class="btn btn-danger rounded" type="submit">Delete</button>
             </form>
     

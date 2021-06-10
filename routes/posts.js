@@ -92,10 +92,22 @@ router.get('/posts/:id', function(req, res, next)
 router.post('/posts/deletePost', checkhAuthenication, function(req, res, next)
 {
     const posts = req.app.locals.posts;
-    const id = req.body;
+    const id = ObjectID(req.body.postID);
     console.log(id);
 
-    res.redirect('/posts');
+    posts
+    .deleteOne({_id: id})
+    .then(function(result)
+    {
+        console.log(`Deleted: ${result.deletedCount}`);
+        res.redirect('/posts');
+    })
+    .catch(function(err)
+    {
+        console.log(`Delete unsuccessful: ${err}`)
+    });
+
+    
     //posts.deleteOne()
 });
 
