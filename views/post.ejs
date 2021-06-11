@@ -1,5 +1,46 @@
 <% include ./header %>
 
+<script>
+
+    window.addEventListener('DOMContentLoaded', function(e)
+    {
+
+        toastr.info('this is a toastr');
+
+        var btnDelete = document.getElementById('btn_deletePost');
+
+        btnDelete.addEventListener('click', function()
+        {
+            Swal.fire(
+            {
+                title: 'Are you sure?',
+                text: "You won't be able to undo this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete Post',
+                reverseButtons:true
+            }).then((result) => {
+            if (result.isConfirmed) 
+            {
+                ////hello me
+                //switch this to toastr
+                Swal.fire({
+                title: 'Deleted!',
+                text: `Your file has been deleted. Redirecting to Posts`,
+                icon: 'success'
+                }).then(() => document.getElementById('btn_submitForm').click());
+            }
+            })
+
+        });
+
+    });
+
+
+</script>
+
 
 <div class="container mt-5">
             
@@ -25,10 +66,12 @@
         <% if (user != null && post.author == user.username) { %>
 
             
-            <form class="d-inline" action="deletePost" method="POST">
+            <form id="deletePost" class="d-inline" action="deletePost" method="POST">
                 <textarea class="d-none" name="postID" id="postID" cols="30" rows="10"><%= post._id %></textarea>
-                <button class="btn btn-danger rounded" type="submit">Delete</button>
+                <button id="btn_submitForm" class="d-none">Delete</button>
+                
             </form>
+            <button class="btn btn-danger rounded"  id="btn_deletePost">Delete</button>
     
             <% } %>
     </nav>
