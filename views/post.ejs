@@ -5,7 +5,6 @@
     window.addEventListener('DOMContentLoaded', function(e)
     {
 
-        toastr.info('this is a toastr');
 
         var btnDelete = document.getElementById('btn_deletePost');
 
@@ -24,11 +23,9 @@
             }).then((result) => {
             if (result.isConfirmed) 
             {
-                ////hello me
-                //switch this to toastr
                 Swal.fire({
                 title: 'Deleted!',
-                text: `Your file has been deleted. Redirecting to Posts`,
+                text: `Your post has been deleted. Redirecting to Posts`,
                 icon: 'success'
                 }).then(() => document.getElementById('btn_submitForm').click());
             }

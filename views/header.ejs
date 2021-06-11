@@ -15,6 +15,13 @@
       toastr.options.timeOut = "2500";
       toastr.options.positionClass = 'toast-bottom-right';
 
+
+      function loggedOut()
+      {
+        toastr.options.timeOut = "2500";
+        toastr.success('Logged out Successfully');
+      }
+
       //Disabling form submissions if there are invalid fields
       (function () {
         'use strict'
@@ -72,6 +79,25 @@
       }
       }); 
     </script>
+
+    <% if (message != null) { %>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', ()=> 
+        {
+
+          var message = `<%- JSON.stringify(message) %>`;
+          if (message.length > 2)
+          {
+            //remove message container ""
+          message = message.substring(1, message.length -1);
+          message.includes('successfully') ? toastr.success(message) : toastr.error(message);
+          }
+          document.getElementById('nav-brand').innerText = 'cock';
+        });
+        
+      </script>
+    <% } %>
   </head>
 
   <body class="container-fluid-lg">
@@ -80,7 +106,7 @@
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">BlogMan</a>
+            <a id="nav-brand" class="navbar-brand" href="#">BlogMan</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -136,7 +162,7 @@
                       </a>
                       <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="/postsByUser">Your Posts</a></li>
-                        <li><a class="dropdown-item" href="/logout">Log out</a></li>
+                        <li><a class="dropdown-item" onclick="loggedOut()" href="/users/logout">Log out</a></li>
                       </ul>
                       <% } %>
                   </li>

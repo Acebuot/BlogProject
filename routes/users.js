@@ -2,6 +2,13 @@ var express = require('express');
 var router = express.Router();
 const passport = require('passport');
 
+
+router.get('/logout', function(req, res){
+  req.logout();
+  req.session.message = "Logged Out Successfully"
+  res.redirect('/posts');
+});
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
