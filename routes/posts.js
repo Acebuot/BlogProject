@@ -174,6 +174,9 @@ router.get('/create-post', checkhAuthenication, function(req, res, next)
 
 });
 
+
+
+//add alert for successful post creation
 router.post('/create-post', checkhAuthenication, function(req, res, next)
 {
     
@@ -200,6 +203,7 @@ router.post('/create-post', checkhAuthenication, function(req, res, next)
                     return res.redirect('/create-post');
                 }
                 console.log('post success');
+                req.session.message = 'Successfully made a post';
                 res.redirect(`/posts/${result.insertedId}`);
             })
         })

@@ -66,6 +66,7 @@ router.post('/login', function(req, res, next)
     {
       
       if (err) return next(err);
+      req.session.message = "Successfully logged in";
       return res.redirect('/create-post');
     })
   })(req,res,next);
@@ -125,6 +126,7 @@ router.post('/register', function(req, res, next)
         {
           
           if (err) return next(err);
+          req.session.message = "Successfully created a new account"
           return res.redirect('/posts');
         })
       })(req,res,next);

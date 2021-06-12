@@ -86,7 +86,7 @@
           {
             //remove message container ""
           message = message.substring(1, message.length -1);
-          message.includes('successfully') ? toastr.success(message) : toastr.error(message);
+          message.toLowerCase().includes('successfully') ? toastr.success(message) : toastr.error(message);
           }
         });
         
@@ -162,7 +162,7 @@
                   </li>
                 </ul>
                 <form method="POST" action="search" class="d-flex">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                  <input class="form-control me-2" type="search" placeholder="Search by user" aria-label="Search">
                 </form>
               </div>
               
