@@ -5,7 +5,7 @@ const passport = require('passport');
 
 router.get('/logout', function(req, res){
   req.logout();
-  req.session.message = "Logged Out Successfully"
+  req.session.message = "Logged out successfully"
   res.redirect('/posts');
 });
 
@@ -103,7 +103,35 @@ router.post('/register', function(req, res, next)
     //create user
     users
     .insertOne({ username, password })
-    .then(function(){req.session.message = `Welcome to the Blog ${username}!`; res.redirect('/posts')})
+    .then(function(user)
+    {
+      //alert success
+      req.session.message = `Account made successfully!`;
+
+      //log in after making account
+      passport.authenticate('local', function(err, user, info) 
+      {
+        if (err)
+        {
+          req.session.message = "An error occurred, please try again later";
+          return res.redirect('register');
+        } 
+        if (!user) 
+        {
+          req.session.message = info.message;
+          return res.redirect('register');
+        }
+        req.logIn(user, (err) => 
+        {
+          
+          if (err) return next(err);
+          return res.redirect('/posts');
+        })
+      })(req,res,next);
+        
+        
+
+    })
     .catch(function(reason)
     {
       console.log(reason);

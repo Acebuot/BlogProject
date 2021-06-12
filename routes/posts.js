@@ -32,7 +32,7 @@ const checkhAuthenication = (req, res, next) =>
 {
     if (!req.isAuthenticated())
     {
-        req.session.message = "You must log in to do that";
+        req.session.message = "You must be logged in to do that";
         return res.redirect('/users/login');
     }
     return next();

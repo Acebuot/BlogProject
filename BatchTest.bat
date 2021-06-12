@@ -1,4 +1,4 @@
-@echo off
+## @echo off
 
 cd ../../users/xoe/desktop/blogproject
 
@@ -10,7 +10,7 @@ git add .
 
 TIMEOUT /T 60
 
-git commit -m "Added and fixed more user features, added search by user, and some bugfixes"
+git commit -m "updated showing of messages, removed unused functions"
 
 TIMEOUT /T 60 
 

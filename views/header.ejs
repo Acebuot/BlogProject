@@ -16,11 +16,6 @@
       toastr.options.positionClass = 'toast-bottom-right';
 
 
-      function loggedOut()
-      {
-        toastr.options.timeOut = "2500";
-        toastr.success('Logged out Successfully');
-      }
 
       //Disabling form submissions if there are invalid fields
       (function () {
@@ -93,7 +88,6 @@
           message = message.substring(1, message.length -1);
           message.includes('successfully') ? toastr.success(message) : toastr.error(message);
           }
-          document.getElementById('nav-brand').innerText = 'cock';
         });
         
       </script>
