@@ -28,10 +28,13 @@ function userLoggedIn(req)
     })
 }
 
+//check if user is logged in
 const checkhAuthenication = (req, res, next) =>
 {
+    // if not
     if (!req.isAuthenticated())
     {
+        //alert user and redirect to login
         req.session.message = "You must be logged in to do that";
         return res.redirect('/users/login');
     }
@@ -48,12 +51,19 @@ router.get('/posts', function(req, res, next)
 
     userLoggedIn(req).then( function(user) 
     {
+        //find all posts
         posts
             .find({})
             .toArray()
             .then(function(posts) 
             {
-                //console.log(user);
+                //if there are no posts
+                if (posts.length == 0)
+                {
+                    //alert user
+                    req.session.message = "There are no posts yet";
+                }
+                //Then load them all up
                 res.render('posts', { title: 'All Posts', posts, message, user});
             });
     });
@@ -73,16 +83,20 @@ router.get('/posts/:id', function(req, res, next)
     userLoggedIn(req)
     .then(function(user) 
     {
+        //find post by id
         posts
         .findOne({ _id: id})
         .then(function(post)
         {
-            
-            
+            //if no such post id
             if (post == null)
             {
-                res.render('posts', { title:`View Post`, posts: arr, message: 'Sorry, the post was not found'});
+                // alert user and redirect
+                req.session.message = "Post not found";
+                res.redirect('/posts')
             }
+
+            //show post
             res.render('post', { title:`View Post`, post, message, user});
         });
     });
@@ -105,10 +119,10 @@ router.post('/posts/deletePost', checkhAuthenication, function(req, res, next)
     .catch(function(err)
     {
         console.log(`Delete unsuccessful: ${err}`)
+        req.session.message = `Delete unsuccessful: ${err}`;
+        res.redirect('/posts');
     });
 
-    
-    //posts.deleteOne()
 });
 
 router.get('/postsByUser', function(req, res, next)
@@ -144,18 +158,30 @@ router.get('/postsByUser/:username', function(req, res, next)
     .then(function(user) 
     {
         
+        //find posts by username
         posts
         .find({author: username})
         .toArray()
         .then(function(posts)
         {
+            //if no post by username
+            if (posts.length == 0) 
+            {
+                //alert user and redirect to posts
+                req.session.message = "No posts by that username was found";
+                return res.redirect('/posts');
+            }
             res.render('posts', { title:`${username}'s Posts`,message, posts, user})
         });
     });
 
 });
 
-router.post('/postsByUser')
+router.post('/postsByUser', function(req, res, next)
+{
+    var username = req.body.username;
+    res.redirect(`/postsByUser/${username}`);
+});
 
 
 router.get('/create-post', checkhAuthenication, function(req, res, next) 
@@ -175,8 +201,6 @@ router.get('/create-post', checkhAuthenication, function(req, res, next)
 });
 
 
-
-//add alert for successful post creation
 router.post('/create-post', checkhAuthenication, function(req, res, next)
 {
     

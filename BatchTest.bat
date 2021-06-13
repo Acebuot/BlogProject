@@ -10,7 +10,7 @@ git add .
 
 TIMEOUT /T 60
 
-git commit -m "updated showing of messages, removed unused functions"
+git commit -m "Added working search by user, documentations, and messages; updated post-deleting and postByUser Get"
 
 TIMEOUT /T 60 
 
